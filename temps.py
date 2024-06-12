@@ -19,6 +19,7 @@ table = [None] * 21
 
 def main():
 
+    file_creation_interval = input("Set the time (in seconds) between each new .csv file creation: ")
     start_seconds = time.time()
     local_time = time.ctime(start_seconds)
 
@@ -34,7 +35,7 @@ def main():
 
                 if message is not None:
                     print("received")
-                    if difference < 20:
+                    if difference < file_creation_interval:
                         decode_message(message)
                         writeToCSV(difference, local_time)
                     else:
@@ -65,7 +66,7 @@ def unpack_bytearray(message_data, can_id, message_time):
         case "0x100"|"0x101"|"0x102"|"0x103"|"0x104"|"0x105"|"0x106"|"0x107":
             segment_number = int(can_id, 16) - 256
 
-            
+            # No min max reading, so nothing here
             
 
         # Avg temp + SOC min/avg/max + CELL TEMP 0-1
@@ -118,7 +119,7 @@ def to_bits(data):
     binary = ""
     for i in range(len(data)):
         i = len(data) - i - 1
-        binary += bin(data[i])[2:].zfill(8)+ ""
+        binary += bin(data[i])[2:].zfill(8)
     return binary
 
 def writeToCSV(difference, DATE_time):
